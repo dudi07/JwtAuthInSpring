@@ -6,6 +6,7 @@ import com.spring.jwt.security.demo.model.User;
 import com.spring.jwt.security.demo.service.AuthenticationService;
 import com.spring.jwt.security.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,6 +21,7 @@ import java.security.Principal;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@Slf4j
 public class HomeController {
 //    http:localhost:8081/home/user
     private final UserService userService;
@@ -37,6 +39,7 @@ public class HomeController {
 
     @PostMapping("/generate")
     public ResponseEntity<GenerateAuthResponse>generateToken(@RequestBody JwtTokenRequest jwtTokenRequest){
+        log.info("Generate token for this request {}" , jwtTokenRequest);
         this.doAuthenticate(jwtTokenRequest.getEmail(), jwtTokenRequest.getPassword());
         UserDetails userDetails = userDetailsService.loadUserByUsername(jwtTokenRequest.getEmail());
         GenerateAuthResponse token = authenticateService.generateToken(userDetails);
