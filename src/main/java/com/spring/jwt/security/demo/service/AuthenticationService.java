@@ -6,6 +6,6 @@ import com.spring.jwt.security.demo.dto.request.ValidateAuthRequest;
 import org.springframework.security.core.userdetails.UserDetails;
 
 public interface AuthenticationService {
-    GenerateAuthResponse generateToken(UserDetails userDetails);
+    GenerateAuthResponse generateToken(UserDetails userDetails, String applicationId);
     ValidateAuthResponse validateToken(ValidateAuthRequest request);
 }

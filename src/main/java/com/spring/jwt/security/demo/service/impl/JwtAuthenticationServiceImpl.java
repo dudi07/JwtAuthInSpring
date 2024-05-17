@@ -20,9 +20,9 @@ public class JwtAuthenticationServiceImpl implements AuthenticationService {
 
     private final JWTHelper jwtHelper;
     @Override
-    public GenerateAuthResponse generateToken(UserDetails user) {
+    public GenerateAuthResponse generateToken(UserDetails user, String applicationId) {
         log.info("Generating jwt token for {}", user);
-        var token =jwtHelper.generateToken(user);
+        var token =jwtHelper.generateToken(user, applicationId);
         return prepareTokenResponse(token, LocalDateTime.now());
     }
 
