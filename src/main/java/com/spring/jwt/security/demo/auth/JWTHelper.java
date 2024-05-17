@@ -1,25 +1,29 @@
 package com.spring.jwt.security.demo.auth;
 
+import com.spring.jwt.security.demo.model.CustomSigningKeyResolver;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.SigningKeyResolver;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
 @Component
+@Slf4j
 public class JWTHelper {
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
+    List<Key> keys = List.of(Keys.secretKeyFor(SignatureAlgorithm.HS512));
 
-    private String secret = "afafasfafafasfasfasfafacasdasfasxASFACASDFACASDFASFASFDAFASFASDAADSCSDFADCVSGCFVADXCcadwavfsfarvf";
+//    private String secret = "afafasfafafasfasfasfafacasdasfasxASFACASDFACASDFASFASFDAFASFASDAADSCSDFADCVSGCFVADXCcadwavfsfarvf";
 
 
     public String getUsernameFromToken(String token) {
@@ -39,8 +43,9 @@ public class JWTHelper {
 
 //        Jwts.parserBuilder().build().
 //        return Jwts.claims();
+        SigningKeyResolver signingKeyResolver = new CustomSigningKeyResolver(keys);
         return Jwts.parserBuilder()
-                .setSigningKey(secret) // Set the signing key for signature verification
+                .setSigningKeyResolver(signingKeyResolver) // Set the signing key for signature verification
                 .build()
                 .parseClaimsJws(token) // Parse the JWT token
                 .getBody();
@@ -55,6 +60,7 @@ public class JWTHelper {
 
     //generate token for user
     public String generateToken(UserDetails userDetails) {
+        log.info("Generating Token");
         Map<String, Object> claims = new HashMap<>();
         return doGenerateToken(claims, userDetails.getUsername());
     }

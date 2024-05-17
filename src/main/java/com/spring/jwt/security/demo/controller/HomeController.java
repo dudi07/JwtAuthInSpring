@@ -19,16 +19,12 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/home")
 @RequiredArgsConstructor
 @Slf4j
 public class HomeController {
 //    http:localhost:8081/home/user
     private final UserService userService;
-    private final AuthenticationService authenticateService;
-    private final AuthenticationManager authenticationManager;
-
-    private UserDetailsService userDetailsService;
     @GetMapping("/user")
     public ResponseEntity<User>getUser(){
         System.out.println("Getting users");
@@ -37,24 +33,6 @@ public class HomeController {
     }
 
 
-    @PostMapping("/generate")
-    public ResponseEntity<GenerateAuthResponse>generateToken(@RequestBody JwtTokenRequest jwtTokenRequest){
-        log.info("Generate token for this request {}" , jwtTokenRequest);
-        this.doAuthenticate(jwtTokenRequest.getEmail(), jwtTokenRequest.getPassword());
-        UserDetails userDetails = userDetailsService.loadUserByUsername(jwtTokenRequest.getEmail());
-        GenerateAuthResponse token = authenticateService.generateToken(userDetails);
-        return new ResponseEntity<>(token, HttpStatus.OK);
-    }
 
-    private void doAuthenticate(String email, String password) {
-
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(email, password);
-        try {
-            authenticationManager.authenticate(authentication);
-        } catch (BadCredentialsException e) {
-            throw new BadCredentialsException(" Invalid Username or Password  !!");
-        }
-
-    }
 
 }

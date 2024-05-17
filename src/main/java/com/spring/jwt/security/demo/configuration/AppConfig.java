@@ -19,8 +19,7 @@ public class AppConfig {
     @Bean
     public UserDetailsService userDetailsService(){
         UserDetails userDetails = User.builder().username("sanjay")
-                .password(passwordEncoder().encode("Sanjay"))
-                .roles("ADMIN")
+                .password(passwordEncoder().encode("Dudi"))
                 .build();
 
 

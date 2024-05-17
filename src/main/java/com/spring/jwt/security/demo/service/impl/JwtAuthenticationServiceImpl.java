@@ -23,16 +23,14 @@ public class JwtAuthenticationServiceImpl implements AuthenticationService {
     public GenerateAuthResponse generateToken(UserDetails user) {
         log.info("Generating jwt token for {}", user);
         var token =jwtHelper.generateToken(user);
-        return prepareTokenResponse(token, jwtHelper.getExpirationDateFromToken(token)
-                .toInstant().
-                atZone(ZoneId.systemDefault()).toLocalDateTime());
+        return prepareTokenResponse(token, LocalDateTime.now());
     }
 
     @Override
     public ValidateAuthResponse validateToken(ValidateAuthRequest request) {
         return null;
     }
-    GenerateAuthResponse prepareTokenResponse(String token, LocalDateTime localDateTime){
+    private GenerateAuthResponse prepareTokenResponse(String token, LocalDateTime localDateTime){
         return GenerateAuthResponse
                 .builder()
                 .expiryTime(localDateTime)
