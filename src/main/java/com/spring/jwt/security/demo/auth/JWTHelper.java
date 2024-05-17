@@ -21,8 +21,6 @@ public class JWTHelper {
     public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60 * 1000; // Corrected token validity in milliseconds
     private static final Logger log = LoggerFactory.getLogger(JWTHelper.class);
     private final Key signingKey = Keys.secretKeyFor(SignatureAlgorithm.HS512);
-//    private String secret = "afafasfafafasfasfasfafacasdasfasxASFACASDFACASDFASFASFDAFASFASDAADSCSDFADCVSGCFVADXCcadwavfsfarvf";
-
 
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
@@ -47,13 +45,11 @@ public class JWTHelper {
 
     }
 
-    //check if the token has expired
     private Boolean isTokenExpired(String token) {
         final Date expiration = getExpirationDateFromToken(token);
         return expiration.before(new Date());
     }
 
-    //generate token for user
     public String generateToken(UserDetails userDetails, String applicationId) {
         log.info("Generate token for the user :: {} ", userDetails);
         Map<String, Object> claims = new HashMap<>();
@@ -68,7 +64,6 @@ public class JWTHelper {
                 .signWith(signingKey).compact();
     }
 
-    //validate token
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = getUsernameFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
